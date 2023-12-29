@@ -10,6 +10,7 @@
 **Inputs (Eshaa)**
 - PS2 Keyboard input to FPGA Board
 - Analog vibration sensors (in progress)
+- Many state FSM to manage sensor states
 - FPGA switches & keys
   
 **Audio Output (Napat)**
