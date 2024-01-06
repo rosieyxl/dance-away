@@ -1,0 +1,88 @@
+// DifficultySelector module
+module DifficultySelector (
+    input wire clk,
+    input wire rst,
+    input wire btn_up,
+    input wire btn_down,
+    input wire btn_left,
+    input wire btn_right,
+    output reg [1:0] difficulty,
+    output reg confirm_popup // Indicates whether the confirmation popup is active
+);
+    // Define parameters for difficulties
+    parameter EASY = 2'b00;
+    parameter MEDIUM = 2'b01;
+    parameter HARD = 2'b10;
+
+    // Define signals
+    reg [1:0] state, next_state;
+    reg [1:0] selected_difficulty; // Temporarily stores the selected difficulty
+
+    // State to manage the confirmation popup
+    reg confirm_popup_state, next_confirm_popup_state;
+
+    // Define state register
+    always @(posedge clk or posedge rst)
+        if (rst) begin
+            state <= EASY;
+            confirm_popup_state <= 1'b0; // Initial state: popup inactive
+        end
+        else begin
+            state <= next_state;
+            confirm_popup_state <= next_confirm_popup_state;
+        end
+
+    // State transition logic
+    always @(posedge clk) begin
+        // Default next state and difficulty values
+        next_state = state;
+        selected_difficulty = state;
+
+        // Default popup state
+        next_confirm_popup_state = confirm_popup_state;
+
+        // State-specific transitions
+        case (state)
+            EASY:
+                if (btn_up)
+                    next_state = MAIN_MENU;
+                else if (btn_down) begin
+                    next_state = SONG_SELECTOR;
+                    next_confirm_popup_state = 1'b1; // Activate confirmation popup
+                end
+                else if (btn_right)
+                    next_state = MEDIUM;
+            MEDIUM:
+                if (btn_up)
+                    next_state = EASY;
+                else if (btn_down) begin
+                    next_state = SONG_SELECTOR;
+                    next_confirm_popup_state = 1'b1; // Activate confirmation popup
+                end
+                else if (btn_left)
+                    next_state = EASY;
+                else if (btn_right)
+                    next_state = HARD;
+            HARD:
+                if (btn_up)
+                    next_state = MEDIUM;
+                else if (btn_down) begin
+                    next_state = SONG_SELECTOR;
+                    next_confirm_popup_state = 1'b1; // Activate confirmation popup
+                end
+                else if (btn_left)
+                    next_state = MEDIUM;
+        endcase
+    end
+
+    // Output logic
+    always @(posedge clk or posedge rst)
+        if (rst) begin
+            difficulty <= EASY;
+            confirm_popup <= 1'b0; // Popup inactive during reset
+        end
+        else begin
+            difficulty <= selected_difficulty;
+            confirm_popup <= confirm_popup_state;
+        end
+endmodule

@@ -1,0 +1,309 @@
+------------------------------------------------------------
+Timing Analyzer Summary
+------------------------------------------------------------
+
+Type  : Slow 1100mV 85C Model Setup 'CLOCK_50'
+Slack : -57.541
+TNS   : -2074.911
+
+Type  : Slow 1100mV 85C Model Setup 'FiniteStateSample:fsm_inst|GameplayState:gameplayState_inst|Music_Player:mop|DE1_SoC_Audio_Example:DE1_SoC_Audio_Example|avconf:avc|mI2C_CTRL_CLK'
+Slack : -5.740
+TNS   : -268.291
+
+Type  : Slow 1100mV 85C Model Setup 'SW[9]'
+Slack : -3.794
+TNS   : -7.374
+
+Type  : Slow 1100mV 85C Model Setup 'fsm_inst|topy|VGA|mypll|altpll_component|auto_generated|generic_pll1~PLL_OUTPUT_COUNTER|divclk'
+Slack : 34.859
+TNS   : 0.000
+
+Type  : Slow 1100mV 85C Model Hold 'CLOCK_50'
+Slack : -0.312
+TNS   : -0.611
+
+Type  : Slow 1100mV 85C Model Hold 'fsm_inst|topy|VGA|mypll|altpll_component|auto_generated|generic_pll1~PLL_OUTPUT_COUNTER|divclk'
+Slack : 0.319
+TNS   : 0.000
+
+Type  : Slow 1100mV 85C Model Hold 'FiniteStateSample:fsm_inst|GameplayState:gameplayState_inst|Music_Player:mop|DE1_SoC_Audio_Example:DE1_SoC_Audio_Example|avconf:avc|mI2C_CTRL_CLK'
+Slack : 0.322
+TNS   : 0.000
+
+Type  : Slow 1100mV 85C Model Hold 'SW[9]'
+Slack : 1.278
+TNS   : 0.000
+
+Type  : Slow 1100mV 85C Model Recovery 'FiniteStateSample:fsm_inst|GameplayState:gameplayState_inst|Music_Player:mop|DE1_SoC_Audio_Example:DE1_SoC_Audio_Example|avconf:avc|mI2C_CTRL_CLK'
+Slack : -5.787
+TNS   : -185.179
+
+Type  : Slow 1100mV 85C Model Recovery 'fsm_inst|topy|VGA|mypll|altpll_component|auto_generated|generic_pll1~PLL_OUTPUT_COUNTER|divclk'
+Slack : -3.565
+TNS   : -88.587
+
+Type  : Slow 1100mV 85C Model Recovery 'CLOCK_50'
+Slack : -2.951
+TNS   : -162.564
+
+Type  : Slow 1100mV 85C Model Removal 'fsm_inst|topy|VGA|mypll|altpll_component|auto_generated|generic_pll1~PLL_OUTPUT_COUNTER|divclk'
+Slack : 0.784
+TNS   : 0.000
+
+Type  : Slow 1100mV 85C Model Removal 'CLOCK_50'
+Slack : 0.788
+TNS   : 0.000
+
+Type  : Slow 1100mV 85C Model Removal 'FiniteStateSample:fsm_inst|GameplayState:gameplayState_inst|Music_Player:mop|DE1_SoC_Audio_Example:DE1_SoC_Audio_Example|avconf:avc|mI2C_CTRL_CLK'
+Slack : 3.729
+TNS   : 0.000
+
+Type  : Slow 1100mV 85C Model Minimum Pulse Width 'FiniteStateSample:fsm_inst|GameplayState:gameplayState_inst|Music_Player:mop|DE1_SoC_Audio_Example:DE1_SoC_Audio_Example|avconf:avc|mI2C_CTRL_CLK'
+Slack : -0.394
+TNS   : -37.343
+
+Type  : Slow 1100mV 85C Model Minimum Pulse Width 'SW[9]'
+Slack : 0.112
+TNS   : 0.000
+
+Type  : Slow 1100mV 85C Model Minimum Pulse Width 'fsm_inst|topy|VGA|mypll|altpll_component|auto_generated|generic_pll1~FRACTIONAL_PLL|vcoph[0]'
+Slack : 1.666
+TNS   : 0.000
+
+Type  : Slow 1100mV 85C Model Minimum Pulse Width 'CLOCK_50'
+Slack : 8.829
+TNS   : 0.000
+
+Type  : Slow 1100mV 85C Model Minimum Pulse Width 'fsm_inst|topy|VGA|mypll|altpll_component|auto_generated|generic_pll1~PLL_OUTPUT_COUNTER|divclk'
+Slack : 18.773
+TNS   : 0.000
+
+Type  : Slow 1100mV 0C Model Setup 'CLOCK_50'
+Slack : -58.774
+TNS   : -2057.352
+
+Type  : Slow 1100mV 0C Model Setup 'FiniteStateSample:fsm_inst|GameplayState:gameplayState_inst|Music_Player:mop|DE1_SoC_Audio_Example:DE1_SoC_Audio_Example|avconf:avc|mI2C_CTRL_CLK'
+Slack : -5.699
+TNS   : -266.719
+
+Type  : Slow 1100mV 0C Model Setup 'SW[9]'
+Slack : -4.008
+TNS   : -7.816
+
+Type  : Slow 1100mV 0C Model Setup 'fsm_inst|topy|VGA|mypll|altpll_component|auto_generated|generic_pll1~PLL_OUTPUT_COUNTER|divclk'
+Slack : 34.942
+TNS   : 0.000
+
+Type  : Slow 1100mV 0C Model Hold 'CLOCK_50'
+Slack : -0.545
+TNS   : -1.082
+
+Type  : Slow 1100mV 0C Model Hold 'fsm_inst|topy|VGA|mypll|altpll_component|auto_generated|generic_pll1~PLL_OUTPUT_COUNTER|divclk'
+Slack : 0.299
+TNS   : 0.000
+
+Type  : Slow 1100mV 0C Model Hold 'FiniteStateSample:fsm_inst|GameplayState:gameplayState_inst|Music_Player:mop|DE1_SoC_Audio_Example:DE1_SoC_Audio_Example|avconf:avc|mI2C_CTRL_CLK'
+Slack : 0.319
+TNS   : 0.000
+
+Type  : Slow 1100mV 0C Model Hold 'SW[9]'
+Slack : 1.427
+TNS   : 0.000
+
+Type  : Slow 1100mV 0C Model Recovery 'FiniteStateSample:fsm_inst|GameplayState:gameplayState_inst|Music_Player:mop|DE1_SoC_Audio_Example:DE1_SoC_Audio_Example|avconf:avc|mI2C_CTRL_CLK'
+Slack : -5.827
+TNS   : -187.121
+
+Type  : Slow 1100mV 0C Model Recovery 'fsm_inst|topy|VGA|mypll|altpll_component|auto_generated|generic_pll1~PLL_OUTPUT_COUNTER|divclk'
+Slack : -3.346
+TNS   : -83.086
+
+Type  : Slow 1100mV 0C Model Recovery 'CLOCK_50'
+Slack : -2.589
+TNS   : -142.657
+
+Type  : Slow 1100mV 0C Model Removal 'CLOCK_50'
+Slack : 0.390
+TNS   : 0.000
+
+Type  : Slow 1100mV 0C Model Removal 'fsm_inst|topy|VGA|mypll|altpll_component|auto_generated|generic_pll1~PLL_OUTPUT_COUNTER|divclk'
+Slack : 0.533
+TNS   : 0.000
+
+Type  : Slow 1100mV 0C Model Removal 'FiniteStateSample:fsm_inst|GameplayState:gameplayState_inst|Music_Player:mop|DE1_SoC_Audio_Example:DE1_SoC_Audio_Example|avconf:avc|mI2C_CTRL_CLK'
+Slack : 3.819
+TNS   : 0.000
+
+Type  : Slow 1100mV 0C Model Minimum Pulse Width 'FiniteStateSample:fsm_inst|GameplayState:gameplayState_inst|Music_Player:mop|DE1_SoC_Audio_Example:DE1_SoC_Audio_Example|avconf:avc|mI2C_CTRL_CLK'
+Slack : -0.394
+TNS   : -37.021
+
+Type  : Slow 1100mV 0C Model Minimum Pulse Width 'SW[9]'
+Slack : 0.094
+TNS   : 0.000
+
+Type  : Slow 1100mV 0C Model Minimum Pulse Width 'fsm_inst|topy|VGA|mypll|altpll_component|auto_generated|generic_pll1~FRACTIONAL_PLL|vcoph[0]'
+Slack : 1.666
+TNS   : 0.000
+
+Type  : Slow 1100mV 0C Model Minimum Pulse Width 'CLOCK_50'
+Slack : 8.781
+TNS   : 0.000
+
+Type  : Slow 1100mV 0C Model Minimum Pulse Width 'fsm_inst|topy|VGA|mypll|altpll_component|auto_generated|generic_pll1~PLL_OUTPUT_COUNTER|divclk'
+Slack : 18.754
+TNS   : 0.000
+
+Type  : Fast 1100mV 85C Model Setup 'CLOCK_50'
+Slack : -23.697
+TNS   : -853.266
+
+Type  : Fast 1100mV 85C Model Setup 'FiniteStateSample:fsm_inst|GameplayState:gameplayState_inst|Music_Player:mop|DE1_SoC_Audio_Example:DE1_SoC_Audio_Example|avconf:avc|mI2C_CTRL_CLK'
+Slack : -3.098
+TNS   : -139.463
+
+Type  : Fast 1100mV 85C Model Setup 'SW[9]'
+Slack : -1.589
+TNS   : -3.090
+
+Type  : Fast 1100mV 85C Model Setup 'fsm_inst|topy|VGA|mypll|altpll_component|auto_generated|generic_pll1~PLL_OUTPUT_COUNTER|divclk'
+Slack : 36.973
+TNS   : 0.000
+
+Type  : Fast 1100mV 85C Model Hold 'FiniteStateSample:fsm_inst|GameplayState:gameplayState_inst|Music_Player:mop|DE1_SoC_Audio_Example:DE1_SoC_Audio_Example|avconf:avc|mI2C_CTRL_CLK'
+Slack : 0.116
+TNS   : 0.000
+
+Type  : Fast 1100mV 85C Model Hold 'CLOCK_50'
+Slack : 0.129
+TNS   : 0.000
+
+Type  : Fast 1100mV 85C Model Hold 'fsm_inst|topy|VGA|mypll|altpll_component|auto_generated|generic_pll1~PLL_OUTPUT_COUNTER|divclk'
+Slack : 0.189
+TNS   : 0.000
+
+Type  : Fast 1100mV 85C Model Hold 'SW[9]'
+Slack : 0.440
+TNS   : 0.000
+
+Type  : Fast 1100mV 85C Model Recovery 'FiniteStateSample:fsm_inst|GameplayState:gameplayState_inst|Music_Player:mop|DE1_SoC_Audio_Example:DE1_SoC_Audio_Example|avconf:avc|mI2C_CTRL_CLK'
+Slack : -3.207
+TNS   : -101.689
+
+Type  : Fast 1100mV 85C Model Recovery 'fsm_inst|topy|VGA|mypll|altpll_component|auto_generated|generic_pll1~PLL_OUTPUT_COUNTER|divclk'
+Slack : -2.394
+TNS   : -59.696
+
+Type  : Fast 1100mV 85C Model Recovery 'CLOCK_50'
+Slack : -2.187
+TNS   : -122.441
+
+Type  : Fast 1100mV 85C Model Removal 'CLOCK_50'
+Slack : 0.378
+TNS   : 0.000
+
+Type  : Fast 1100mV 85C Model Removal 'fsm_inst|topy|VGA|mypll|altpll_component|auto_generated|generic_pll1~PLL_OUTPUT_COUNTER|divclk'
+Slack : 0.504
+TNS   : 0.000
+
+Type  : Fast 1100mV 85C Model Removal 'FiniteStateSample:fsm_inst|GameplayState:gameplayState_inst|Music_Player:mop|DE1_SoC_Audio_Example:DE1_SoC_Audio_Example|avconf:avc|mI2C_CTRL_CLK'
+Slack : 1.996
+TNS   : 0.000
+
+Type  : Fast 1100mV 85C Model Minimum Pulse Width 'SW[9]'
+Slack : -0.145
+TNS   : -0.710
+
+Type  : Fast 1100mV 85C Model Minimum Pulse Width 'FiniteStateSample:fsm_inst|GameplayState:gameplayState_inst|Music_Player:mop|DE1_SoC_Audio_Example:DE1_SoC_Audio_Example|avconf:avc|mI2C_CTRL_CLK'
+Slack : 0.019
+TNS   : 0.000
+
+Type  : Fast 1100mV 85C Model Minimum Pulse Width 'fsm_inst|topy|VGA|mypll|altpll_component|auto_generated|generic_pll1~FRACTIONAL_PLL|vcoph[0]'
+Slack : 1.666
+TNS   : 0.000
+
+Type  : Fast 1100mV 85C Model Minimum Pulse Width 'CLOCK_50'
+Slack : 8.815
+TNS   : 0.000
+
+Type  : Fast 1100mV 85C Model Minimum Pulse Width 'fsm_inst|topy|VGA|mypll|altpll_component|auto_generated|generic_pll1~PLL_OUTPUT_COUNTER|divclk'
+Slack : 18.891
+TNS   : 0.000
+
+Type  : Fast 1100mV 0C Model Setup 'CLOCK_50'
+Slack : -20.872
+TNS   : -713.526
+
+Type  : Fast 1100mV 0C Model Setup 'FiniteStateSample:fsm_inst|GameplayState:gameplayState_inst|Music_Player:mop|DE1_SoC_Audio_Example:DE1_SoC_Audio_Example|avconf:avc|mI2C_CTRL_CLK'
+Slack : -2.925
+TNS   : -129.217
+
+Type  : Fast 1100mV 0C Model Setup 'SW[9]'
+Slack : -1.545
+TNS   : -3.003
+
+Type  : Fast 1100mV 0C Model Setup 'fsm_inst|topy|VGA|mypll|altpll_component|auto_generated|generic_pll1~PLL_OUTPUT_COUNTER|divclk'
+Slack : 37.245
+TNS   : 0.000
+
+Type  : Fast 1100mV 0C Model Hold 'CLOCK_50'
+Slack : -0.005
+TNS   : -0.016
+
+Type  : Fast 1100mV 0C Model Hold 'FiniteStateSample:fsm_inst|GameplayState:gameplayState_inst|Music_Player:mop|DE1_SoC_Audio_Example:DE1_SoC_Audio_Example|avconf:avc|mI2C_CTRL_CLK'
+Slack : 0.099
+TNS   : 0.000
+
+Type  : Fast 1100mV 0C Model Hold 'fsm_inst|topy|VGA|mypll|altpll_component|auto_generated|generic_pll1~PLL_OUTPUT_COUNTER|divclk'
+Slack : 0.171
+TNS   : 0.000
+
+Type  : Fast 1100mV 0C Model Hold 'SW[9]'
+Slack : 0.499
+TNS   : 0.000
+
+Type  : Fast 1100mV 0C Model Recovery 'FiniteStateSample:fsm_inst|GameplayState:gameplayState_inst|Music_Player:mop|DE1_SoC_Audio_Example:DE1_SoC_Audio_Example|avconf:avc|mI2C_CTRL_CLK'
+Slack : -3.043
+TNS   : -96.917
+
+Type  : Fast 1100mV 0C Model Recovery 'fsm_inst|topy|VGA|mypll|altpll_component|auto_generated|generic_pll1~PLL_OUTPUT_COUNTER|divclk'
+Slack : -2.177
+TNS   : -54.272
+
+Type  : Fast 1100mV 0C Model Recovery 'CLOCK_50'
+Slack : -1.820
+TNS   : -102.826
+
+Type  : Fast 1100mV 0C Model Removal 'CLOCK_50'
+Slack : 0.104
+TNS   : 0.000
+
+Type  : Fast 1100mV 0C Model Removal 'fsm_inst|topy|VGA|mypll|altpll_component|auto_generated|generic_pll1~PLL_OUTPUT_COUNTER|divclk'
+Slack : 0.323
+TNS   : 0.000
+
+Type  : Fast 1100mV 0C Model Removal 'FiniteStateSample:fsm_inst|GameplayState:gameplayState_inst|Music_Player:mop|DE1_SoC_Audio_Example:DE1_SoC_Audio_Example|avconf:avc|mI2C_CTRL_CLK'
+Slack : 1.958
+TNS   : 0.000
+
+Type  : Fast 1100mV 0C Model Minimum Pulse Width 'SW[9]'
+Slack : -0.145
+TNS   : -0.764
+
+Type  : Fast 1100mV 0C Model Minimum Pulse Width 'FiniteStateSample:fsm_inst|GameplayState:gameplayState_inst|Music_Player:mop|DE1_SoC_Audio_Example:DE1_SoC_Audio_Example|avconf:avc|mI2C_CTRL_CLK'
+Slack : 0.047
+TNS   : 0.000
+
+Type  : Fast 1100mV 0C Model Minimum Pulse Width 'fsm_inst|topy|VGA|mypll|altpll_component|auto_generated|generic_pll1~FRACTIONAL_PLL|vcoph[0]'
+Slack : 1.666
+TNS   : 0.000
+
+Type  : Fast 1100mV 0C Model Minimum Pulse Width 'CLOCK_50'
+Slack : 8.808
+TNS   : 0.000
+
+Type  : Fast 1100mV 0C Model Minimum Pulse Width 'fsm_inst|topy|VGA|mypll|altpll_component|auto_generated|generic_pll1~PLL_OUTPUT_COUNTER|divclk'
+Slack : 18.888
+TNS   : 0.000
+
+------------------------------------------------------------

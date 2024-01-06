@@ -1,0 +1,305 @@
+module Song_FSM (
+    input Clock,          // Clock input
+    input Reset,          // Reset signal
+    input [1:0] selected_song,    // Speed control (1/2, 1/1, 2/1, 4/1)
+    input [31:0] note_counter,
+	 output reg [18:0] frequency,
+	 output reg done
+);
+
+localparam 
+A1 = 	20'd909091,
+Bb1 =	20'd858068,
+B1 =	20'd809908,
+C2 =	20'd764451,
+Db2 =	20'd721546,
+D2 =	20'd681049,
+Eb2 =	20'd642824,
+E2 =	20'd606745,
+F2 =	20'd572691,
+Gb2 =	20'd540549,
+G2 =	20'd510210,
+Ab2 =	20'd481574,
+A2 =	20'd454545,
+Bb2 =	20'd429034,
+B2 =	20'd404954,
+C3 =	20'd382226,
+Db3 =	20'd360773,
+D3 =	20'd340524,
+Eb3 =	20'd321412,
+E3 =	20'd303373,
+F3 =	20'd286346,
+Gb3 =	20'd270274,
+G3 =	20'd255105,
+Ab3 =	20'd240787,
+A3 =	20'd227273,
+Bb3 =	20'd214517,
+B3 =	20'd202477,
+C4 =	20'd191113,
+Db4 =	20'd180386,
+D4 =	20'd170262,
+Eb4 =	20'd160706,
+E4 =	20'd151686,
+F4 =	20'd143173,
+Gb4 =	20'd135137,
+G4 =	20'd127553,
+Ab4 =	20'd120394,
+A4 =	20'd113636,
+Bb4 =	20'd107258,
+B4 =	20'd101238,
+C5 =	20'd95556,
+Db5 =	20'd90193,
+D5 =	20'd85131,
+Eb5 =	20'd80353,
+E5 =	20'd75843,
+F5 =	20'd71586,
+Gb5 =	20'd67569,
+G5 =	20'd63776,
+Ab5 =	20'd60197,
+A5 =	20'd56818,
+Bb5 =	20'd53629,
+B5 =	20'd50619,
+C6 =	20'd47778,
+Db6 =	20'd45097,
+D6 =	20'd42566,
+Eb6 =	20'd40177,
+E6 =	20'd37922,
+F6 =	20'd35793,
+Gb6 =	20'd33784,
+G6 =	20'd31888,
+Ab6 =	20'd30098,
+A6 =	20'd28409,
+clocky = 50000000;
+	 
+	 always @(posedge Clock) begin
+	 
+	 done <= 0;
+ 
+ case (selected_song)
+  
+  //Song 1
+  4'b0001: begin
+  
+  // Start song
+  case (note_counter)
+		0: frequency <= 0;
+		1: frequency <= E4;
+		2: frequency <= 0;
+		3: frequency <= D4;
+		4: frequency <= 0;		
+		5: frequency <= C4; // Example duration for A4
+		6: frequency <= 0;
+		7: frequency <= D4;
+		8: frequency <= 0;	
+		9: frequency <= E4;
+		10: frequency <= 0;
+		11: frequency <= E4;
+		12: frequency <= 0;
+		13: frequency <= E4;
+		14: frequency <= 0;
+		15: frequency <= D4;
+		16: frequency <= 0;
+		17: frequency <= D4;
+		18: frequency <= 0;
+		19: frequency <= D4;
+		20: frequency <= 0;
+		21: frequency <= E4;
+		22: frequency <= 0;
+		23: frequency <= G4;
+		24: frequency <= 0;
+		25: frequency <= G4;
+		26: frequency <= 0;
+		27: frequency <= E4;
+		28: frequency <= 0;
+		29: frequency <= D4;
+		30: frequency <= 0;		
+		31: frequency <= C4; // Example duration for A4
+		32: frequency <= 0;
+		33: frequency <= D4;
+		34: frequency <= 0;	
+		35: frequency <= E4;
+		36: frequency <= 0;
+		37: frequency <= E4;
+		38: frequency <= 0;
+		39: frequency <= E4;
+		40: frequency <= 0;
+		41: frequency <= D4;
+		42: frequency <= 0;
+		43: frequency <= D4;
+		44: frequency <= 0;
+		45: frequency <= E4;
+		46: frequency <= 0;
+		47: frequency <= D4;
+		48: frequency <= 0;
+		49: frequency <= C4;
+		50: done <= 1;
+		
+		// Add cases for other notes and durations as needed
+		default: done <= 1; // Reset when not in loop
+  endcase
+  
+  // end song
+  
+  end
+  
+  // Song 2
+  4'b0010: begin 
+  
+  case (note_counter + 1)
+
+    1: frequency <= G4;
+    2: frequency <= G4;
+    3: frequency <= G4;
+    4: frequency <= 0;
+    5: frequency <= G4;
+    6: frequency <= G4;
+    7: frequency <= G4;
+    8: frequency <= 0;
+    9: frequency <= G4;
+    10: frequency <= G4;
+    11: frequency <= G4;
+    12: frequency <= 0;
+    13: frequency <= Eb4;
+    14: frequency <= Eb4;
+    15: frequency <= Eb4;
+    16: frequency <= Bb4;
+
+    17: frequency <= G4;
+    18: frequency <= G4;
+    19: frequency <= G4;
+    20: frequency <= G4;
+    21: frequency <= Eb4;
+    22: frequency <= Eb4;
+    23: frequency <= Eb4;
+    24: frequency <= Bb4;
+    25: frequency <= G4;
+    26: frequency <= G4;
+    27: frequency <= G4;
+    28: frequency <= G4;
+    29: frequency <= G4;
+    30: frequency <= G4;
+    31: frequency <= G4;
+    32: frequency <= G4;
+
+    33: frequency <= D5;
+    34: frequency <= D5;
+    35: frequency <= D5;
+    36: frequency <= 0;
+    37: frequency <= D5;
+    38: frequency <= D5;
+    39: frequency <= D5;
+    40: frequency <= 0;
+    41: frequency <= D5;
+    42: frequency <= D5;
+    43: frequency <= D5;
+    44: frequency <= D5;
+    45: frequency <= Eb5;
+    46: frequency <= Eb5;
+    47: frequency <= Eb5;
+    48: frequency <= Bb4;
+
+    49: frequency <= Gb4;
+    50: frequency <= Gb4;
+    51: frequency <= Gb4;
+    52: frequency <= Gb4;
+    53: frequency <= Eb4;
+    54: frequency <= Eb4;
+    55: frequency <= Eb4;
+    56: frequency <= Bb4;
+    57: frequency <= G4;
+    58: frequency <= G4;
+    59: frequency <= G4;
+    60: frequency <= G4;
+    61: frequency <= G4;
+    62: frequency <= G4;
+    63: frequency <= G4;
+    64: frequency <= G4;
+
+    65: frequency <= G5;
+    66: frequency <= G5;
+    67: frequency <= G5;
+    68: frequency <= G5;
+    69: frequency <= G4;
+    70: frequency <= G4;
+    71: frequency <= 0;
+    72: frequency <= G4;
+    73: frequency <= G5;
+    74: frequency <= G5;
+    75: frequency <= G5;
+    76: frequency <= G5;
+    77: frequency <= Gb5;
+    78: frequency <= Gb5;
+    79: frequency <= Gb5;
+    80: frequency <= F5;
+
+    81: frequency <= E5;
+    82: frequency <= Eb5;
+    83: frequency <= E5;
+    84: frequency <= E5;
+    85: frequency <= 0;
+    86: frequency <= 0;
+    87: frequency <= Ab4;
+    88: frequency <= Ab4;
+    89: frequency <= Db5;
+    90: frequency <= Db5;
+    91: frequency <= Db5;
+    92: frequency <= Db5;
+    93: frequency <= C5;
+    94: frequency <= C5;
+    95: frequency <= C5;
+    96: frequency <= B4;
+
+    97: frequency <= Bb4;
+    98: frequency <= A4;
+    99: frequency <= Bb4;
+    100: frequency <= Bb4;
+    101: frequency <= 0;
+    102: frequency <= 0;
+    103: frequency <= Eb4;
+    104: frequency <= Eb4;
+    105: frequency <= Gb4;
+    106: frequency <= Gb4;
+    107: frequency <= Gb4;
+    108: frequency <= Gb4;
+    109: frequency <= Eb4;
+    110: frequency <= Eb4;
+    111: frequency <= Eb4;
+    112: frequency <= G4;
+
+    113: frequency <= Bb4;
+    114: frequency <= Bb4;
+    115: frequency <= Bb4;
+    116: frequency <= Bb4;
+    117: frequency <= G4;
+    118: frequency <= G4;
+    119: frequency <= G4;
+    120: frequency <= Bb4;
+    121: frequency <= D5;
+    122: frequency <= D5;
+    123: frequency <= D5;
+    124: frequency <= D5;
+    125: frequency <= D5;
+    126: frequency <= D5;
+    127: frequency <= D5;
+    128: frequency <= D5;
+	 129: done <= 1;
+	
+	
+		
+		// Add cases for other notes and durations as needed
+		default: done <= 1; // Silence when not in a note
+  endcase
+  
+  
+ end
+ 
+ endcase;
+  
+  
+  
+  
+ 
+  
+ end
+
+endmodule

@@ -1,0 +1,76 @@
+/* 
+This file gives a copy pastable list of local parameters for the DE1-SoC audio core.
+The audio core example uses 2 values, the "delay", which specifies how much to divide the 50mHz clock
+and the amplitude, which is specified in the ternary statement which flips between positive and negative.
+
+This list uses some simple music theory knowledge to convert the "delay" counter, to a frequency corresponding to a note.
+
+Note (hehe): this list only covers from A1-A6, which is enough to cover a lot of music. Also, the delay counter and delay that is 
+default to the example program is not big enough to handle these integers. You must change the bit width to a minimum of 20 
+for the delay and counter!
+
+PUT TOGETHER BY DOMINIK DANDA
+*/
+
+localparam 
+A1 = 	20'd909091,
+Bb1 =	20'd858068,
+B1 =	20'd809908,
+C2 =	20'd764451,
+Db2 =	20'd721546,
+D2 =	20'd681049,
+Eb2 =	20'd642824,
+E2 =	20'd606745,
+F2 =	20'd572691,
+Gb2 =	20'd540549,
+G2 =	20'd510210,
+Ab2 =	20'd481574,
+A2 =	20'd454545,
+Bb2 =	20'd429034,
+B2 =	20'd404954,
+C3 =	20'd382226,
+Db3 =	20'd360773,
+D3 =	20'd340524,
+Eb3 =	20'd321412,
+E3 =	20'd303373,
+F3 =	20'd286346,
+Gb3 =	20'd270274,
+G3 =	20'd255105,
+Ab3 =	20'd240787,
+A3 =	20'd227273,
+Bb3 =	20'd214517,
+B3 =	20'd202477,
+C4 =	20'd191113,
+Db4 =	20'd180386,
+D4 =	20'd170262,
+Eb4 =	20'd160706,
+E4 =	20'd151686,
+F4 =	20'd143173,
+Gb4 =	20'd135137,
+G4 =	20'd127553,
+Ab4 =	20'd120394,
+A4 =	20'd113636,
+Bb4 =	20'd107258,
+B4 =	20'd101238,
+C5 =	20'd95556,
+Db5 =	20'd90193,
+D5 =	20'd85131,
+Eb5 =	20'd80353,
+E5 =	20'd75843,
+F5 =	20'd71586,
+Gb5 =	20'd67569,
+G5 =	20'd63776,
+Ab5 =	20'd60197,
+A5 =	20'd56818,
+Bb5 =	20'd53629,
+B5 =	20'd50619,
+C6 =	20'd47778,
+Db6 =	20'd45097,
+D6 =	20'd42566,
+Eb6 =	20'd40177,
+E6 =	20'd37922,
+F6 =	20'd35793,
+Gb6 =	20'd33784,
+G6 =	20'd31888,
+Ab6 =	20'd30098,
+A6 =	20'd28409;

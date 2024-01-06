@@ -1,0 +1,58 @@
+	module ScoreUpdater(
+	  input wire clk,
+	  input wire reset,
+	  input wire [1:0] selector, // Selector input to choose the operation
+	  input wire [31:0] scoreCounter_in, // Input score from ScoreCounter
+	  input wire [31:0] streakCounter_in, // Input streak from StreakCounter
+	  output reg [31:0] scoreCounter_out, // Output score to ScoreCounter
+	  output reg [31:0] streakCounter_out // Output streak to StreakCounter
+	);
+	
+	// Implementation works with holding
+
+	  reg [1:0] selector_reg; // Register for storing the selector value
+
+	  always @(posedge clk or posedge reset) begin
+		 if (reset) begin
+			selector_reg <= 2'b00; // Initialize selector to 0
+			scoreCounter_out <= 0;
+			streakCounter_out <= 0;
+		 end else begin
+			selector_reg <= selector;
+
+		 // Default values
+		 //scoreCounter_out = scoreCounter_in;
+		 //streakCounter_out = streakCounter_in;
+
+		 // Update values based on the selector
+		 case (selector_reg)
+			2'b00: begin	
+					scoreCounter_out = scoreCounter_in;
+					streakCounter_out = streakCounter_out;
+			end // triggered when game starts / game ends
+		 
+			2'b01: begin // Increment score by 1, increment streak by 1
+				scoreCounter_out = (streakCounter_in > 4) ? scoreCounter_in + 2 : scoreCounter_in + 1; 
+				streakCounter_out = streakCounter_in + 1;
+			end // triggered on ok hit
+			
+			2'b10: begin // Increment score by 2, increment streak by 1
+				scoreCounter_out = (streakCounter_in > 4) ? scoreCounter_in + 4 : scoreCounter_in + 2; 
+				streakCounter_out = streakCounter_in + 1;
+			end // triggered on perfect hit
+			
+			2'b11: begin // Don't increment score, reset streak
+			  scoreCounter_out = scoreCounter_in;
+			  streakCounter_out = 0;
+			end // triggered on miss or bad hit
+			
+			default: begin // Default operation
+			  scoreCounter_out = scoreCounter_in;
+			  streakCounter_out = streakCounter_in;
+			end
+		 endcase
+		 
+		 end
+	  end
+
+	endmodule
