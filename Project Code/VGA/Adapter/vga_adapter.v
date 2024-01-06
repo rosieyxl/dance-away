@@ -73,6 +73,8 @@
  *		   now supports 2 different resolutions as well as uses half the memory compared to prior
  *		   implementation. Also, all settings for the module can be specified from the point
  *		   of instantiation, rather than by modifying the source code. (Tomasz S. Czajkowski)
+ *	
+ * December 3, 2023 - Made modifications to allow for double buffering (duplicated the altsyncram module). (Yong Xi Liu)
  */
 
 module vga_adapter(
@@ -80,7 +82,6 @@ module vga_adapter(
 			clock,
 			colour,
 			x, y, plot,
-			/* Signals for the DAC to drive the monitor. */
 			VGA_R,
 			VGA_G,
 			VGA_B,
@@ -157,15 +158,19 @@ module vga_adapter(
 	wire valid_320x240;
 	/* Set to 1 if the specified coordinates are in a valid range for a given resolution.*/
 	
-	wire writeEn;
+	wire writeEn_A;
+	wire writeEn_B;
+	wire [2:0] to_ctrl_colour_A;
+	wire [2:0] to_ctrl_colour_B;
+	reg AorB;
+	
 	/* This is a local signal that allows the Video Memory contents to be changed.
 	 * It depends on the screen resolution, the values of X and Y inputs, as well as 
 	 * the state of the plot signal.
 	 */
-	
-	wire [((MONOCHROME == "TRUE") ? (0) : (BITS_PER_COLOUR_CHANNEL*3-1)):0] to_ctrl_colour;
-	/* Pixel colour read by the VGA controller */
-	
+	 
+	//((MONOCHROME == "TRUE") ? (0) : (BITS_PER_COLOUR_CHANNEL*3-1))
+		
 	wire [((RESOLUTION == "320x240") ? (16) : (14)):0] user_to_video_memory_addr;
 	/* This bus specifies the address in memory the user must write
 	 * data to in order for the pixel intended to appear at location (X,Y) to be displayed
@@ -195,12 +200,19 @@ module vga_adapter(
 
 	assign valid_160x120 = (({1'b0, x} >= 0) & ({1'b0, x} < 160) & ({1'b0, y} >= 0) & ({1'b0, y} < 120)) & (RESOLUTION == "160x120");
 	assign valid_320x240 = (({1'b0, x} >= 0) & ({1'b0, x} < 320) & ({1'b0, y} >= 0) & ({1'b0, y} < 240)) & (RESOLUTION == "320x240");
-	assign writeEn = (plot) & (valid_160x120 | valid_320x240);
+
 	/* Allow the user to plot a pixel if and only if the (X,Y) coordinates supplied are in a valid range. */
 	
+	always @(negedge VGA_VS) begin
+		AorB = !AorB;
+	end
+
+	assign writeEn_A = (plot) & (valid_160x120) & (AorB);
+	assign writeEn_B = (plot) & (valid_160x120) & (!AorB);
+	
 	/* Create video memory. */
-	altsyncram	VideoMemory (
-				.wren_a (writeEn),
+	altsyncram	VideoMemory_A (
+				.wren_a (writeEn_A),
 				.wren_b (gnd),
 				.clock0 (clock), // write clock
 				.clock1 (clock_25), // read clock
@@ -209,24 +221,53 @@ module vga_adapter(
 				.address_a (user_to_video_memory_addr),
 				.address_b (controller_to_video_memory_addr),
 				.data_a (colour), // data in
-				.q_b (to_ctrl_colour)	// data out
+				.q_b (to_ctrl_colour_A)	// data out
 				);
 	defparam
-		VideoMemory.WIDTH_A = ((MONOCHROME == "FALSE") ? (BITS_PER_COLOUR_CHANNEL*3) : 1),
-		VideoMemory.WIDTH_B = ((MONOCHROME == "FALSE") ? (BITS_PER_COLOUR_CHANNEL*3) : 1),
-		VideoMemory.INTENDED_DEVICE_FAMILY = "Cyclone II",
-		VideoMemory.OPERATION_MODE = "DUAL_PORT",
-		VideoMemory.WIDTHAD_A = ((RESOLUTION == "320x240") ? (17) : (15)),
-		VideoMemory.NUMWORDS_A = ((RESOLUTION == "320x240") ? (76800) : (19200)),
-		VideoMemory.WIDTHAD_B = ((RESOLUTION == "320x240") ? (17) : (15)),
-		VideoMemory.NUMWORDS_B = ((RESOLUTION == "320x240") ? (76800) : (19200)),
-		VideoMemory.OUTDATA_REG_B = "CLOCK1",
-		VideoMemory.ADDRESS_REG_B = "CLOCK1",
-		VideoMemory.CLOCK_ENABLE_INPUT_A = "BYPASS",
-		VideoMemory.CLOCK_ENABLE_INPUT_B = "BYPASS",
-		VideoMemory.CLOCK_ENABLE_OUTPUT_B = "BYPASS",
-		VideoMemory.POWER_UP_UNINITIALIZED = "FALSE",
-		VideoMemory.INIT_FILE = BACKGROUND_IMAGE;
+		VideoMemory_A.WIDTH_A = ((MONOCHROME == "FALSE") ? (BITS_PER_COLOUR_CHANNEL*3) : 1),
+		VideoMemory_A.WIDTH_B = ((MONOCHROME == "FALSE") ? (BITS_PER_COLOUR_CHANNEL*3) : 1),
+		VideoMemory_A.INTENDED_DEVICE_FAMILY = "Cyclone II",
+		VideoMemory_A.OPERATION_MODE = "DUAL_PORT",
+		VideoMemory_A.WIDTHAD_A = ((RESOLUTION == "320x240") ? (17) : (15)),
+		VideoMemory_A.NUMWORDS_A = ((RESOLUTION == "320x240") ? (76800) : (19200)),
+		VideoMemory_A.WIDTHAD_B = ((RESOLUTION == "320x240") ? (17) : (15)),
+		VideoMemory_A.NUMWORDS_B = ((RESOLUTION == "320x240") ? (76800) : (19200)),
+		VideoMemory_A.OUTDATA_REG_B = "CLOCK1",
+		VideoMemory_A.ADDRESS_REG_B = "CLOCK1",
+		VideoMemory_A.CLOCK_ENABLE_INPUT_A = "BYPASS",
+		VideoMemory_A.CLOCK_ENABLE_INPUT_B = "BYPASS",
+		VideoMemory_A.CLOCK_ENABLE_OUTPUT_B = "BYPASS",
+		VideoMemory_A.POWER_UP_UNINITIALIZED = "FALSE",
+		VideoMemory_A.INIT_FILE = BACKGROUND_IMAGE;
+		
+	altsyncram	VideoMemory_B (
+				.wren_a (writeEn_B),
+				.wren_b (gnd),
+				.clock0 (clock), // write clock
+				.clock1 (clock_25), // read clock
+				.clocken0 (vcc), // write enable clock
+				.clocken1 (vcc), // read enable clock				
+				.address_a (user_to_video_memory_addr),
+				.address_b (controller_to_video_memory_addr),
+				.data_a (colour), // data in
+				.q_b (to_ctrl_colour_B)	// data out
+				);
+	defparam
+		VideoMemory_B.WIDTH_A = ((MONOCHROME == "FALSE") ? (BITS_PER_COLOUR_CHANNEL*3) : 1),
+		VideoMemory_B.WIDTH_B = ((MONOCHROME == "FALSE") ? (BITS_PER_COLOUR_CHANNEL*3) : 1),
+		VideoMemory_B.INTENDED_DEVICE_FAMILY = "Cyclone II",
+		VideoMemory_B.OPERATION_MODE = "DUAL_PORT",
+		VideoMemory_B.WIDTHAD_A = ((RESOLUTION == "320x240") ? (17) : (15)),
+		VideoMemory_B.NUMWORDS_A = ((RESOLUTION == "320x240") ? (76800) : (19200)),
+		VideoMemory_B.WIDTHAD_B = ((RESOLUTION == "320x240") ? (17) : (15)),
+		VideoMemory_B.NUMWORDS_B = ((RESOLUTION == "320x240") ? (76800) : (19200)),
+		VideoMemory_B.OUTDATA_REG_B = "CLOCK1",
+		VideoMemory_B.ADDRESS_REG_B = "CLOCK1",
+		VideoMemory_B.CLOCK_ENABLE_INPUT_A = "BYPASS",
+		VideoMemory_B.CLOCK_ENABLE_INPUT_B = "BYPASS",
+		VideoMemory_B.CLOCK_ENABLE_OUTPUT_B = "BYPASS",
+		VideoMemory_B.POWER_UP_UNINITIALIZED = "FALSE",
+		VideoMemory_B.INIT_FILE = BACKGROUND_IMAGE;
 		
 	vga_pll mypll(clock, clock_25);
 	/* This module generates a clock with half the frequency of the input clock.
@@ -249,7 +290,7 @@ module vga_adapter(
 	vga_controller controller(
 			.vga_clock(clock_25),
 			.resetn(resetn),
-			.pixel_colour(to_ctrl_colour),
+			.pixel_colour(AorB ? to_ctrl_colour_A : to_ctrl_colour_B),
 			.memory_address(controller_to_video_memory_addr), 
 			.VGA_R(r),
 			.VGA_G(g),
@@ -265,4 +306,3 @@ module vga_adapter(
 		defparam controller.RESOLUTION = RESOLUTION;
 
 endmodule
-	
