@@ -1,0 +1,142 @@
+module FiniteStateSample (
+    input wire clk,
+    input wire rst,
+    input wire btn_up,   // Up button
+    input wire btn_down, // Down button
+    input wire btn_left, // Left button
+    input wire btn_right // Right button
+);
+
+    // Define parameters for states
+    parameter MAIN_MENU = 2'b00;
+    parameter DIFFICULTY_SELECTOR = 2'b01;
+    parameter SONG_SELECTOR = 2'b10;
+    parameter GAMEPLAY = 2'b11;
+
+    // Define signals
+    reg [1:0] state;
+    reg [1:0] next_state;
+    reg [1:0] difficulty; // To store selected difficulty
+	 
+	 // Debounced button signals
+    reg debounced_btn_up;
+    reg debounced_btn_down;
+    reg debounced_btn_left;
+    reg debounced_btn_right;
+
+    // Instantiate debouncers for each button
+    ButtonDebouncer debouncer_up (.clk(clk), .rst(rst), .raw_btn(btn_up), .debounced_btn(debounced_btn_up));
+    ButtonDebouncer debouncer_down (.clk(clk), .rst(rst), .raw_btn(btn_down), .debounced_btn(debounced_btn_down));
+    ButtonDebouncer debouncer_left (.clk(clk), .rst(rst), .raw_btn(btn_left), .debounced_btn(debounced_btn_left));
+    ButtonDebouncer debouncer_right (.clk(clk), .rst(rst), .raw_btn(btn_right), .debounced_btn(debounced_btn_right));
+
+    // Define state register
+    always @(posedge clk or posedge rst)
+        if (rst)
+		  begin
+				$display("Reset has been called");
+            state <= MAIN_MENU;
+				end
+        else
+            state <= next_state;
+
+    // Define next state logic
+    //always @(posedge clk)
+    //    next_state = state;
+
+    // State transition logic
+    always @(posedge clk) begin
+        case (state)
+            MAIN_MENU: 
+				begin
+					$display("State = Main Menu");
+						 if (btn_up || btn_down || btn_left || btn_right) begin
+							  next_state = DIFFICULTY_SELECTOR;
+
+						 end
+						 // Add any other transitions as needed
+				end	
+            DIFFICULTY_SELECTOR:
+				begin
+					 $display("State = Difficulty Selector");
+                if (btn_up) begin
+                    next_state = MAIN_MENU;
+                    $display("btn_up detected, going back to main");
+                end
+                else if (btn_down) begin
+                    next_state = SONG_SELECTOR;
+                    $display("btn_down detected, going to song selector");
+                end
+                // Add any other transitions as needed
+				 end
+            SONG_SELECTOR:
+				begin
+					$display("State = Song Selector");
+                if (btn_up) begin
+						$display("btn_up detected, going back to difficulty selector");
+                    next_state = DIFFICULTY_SELECTOR;
+                    
+                end
+                else if (btn_down) begin
+					 $display("btn_down detected, going to gameplay");
+                    next_state = GAMEPLAY; // Move this line inside the SONG_SELECTOR case
+                end
+                // Add logic to navigate through songs
+                // Add any other transitions as needed
+				 end
+            GAMEPLAY:
+				begin
+					$display("State = Gameplay");
+                // Add logic for gameplay state
+                // Transition back to SONG_SELECTOR when the game is finished
+                // You can use an additional signal to indicate when the game is finished
+                // For example, a signal named game_finished
+                // if (game_finished)
+                //     next_state = SONG_SELECTOR;
+                // Add any other transitions as needed
+					 
+					 // Just for testing, don't put this in the actual implementation
+                if (btn_up) begin
+					 $display("btn_up detected, going back to song selector");
+                    next_state = SONG_SELECTOR;
+                end
+				 end
+				 
+        endcase
+    end
+
+endmodule
+
+module ButtonDebouncer (
+    input wire clk,
+    input wire rst,
+    input wire raw_btn, // Raw button state
+    output reg debounced_btn // Debounced button state
+);
+
+    // Define parameters for debouncing
+    parameter DEBOUNCE_DELAY = 10; // Adjust as needed
+
+    // Internal signals for debounce logic
+    reg [DEBOUNCE_DELAY-1:0] shift_reg;
+    reg [DEBOUNCE_DELAY-1:0] shift_reg_d1;
+    reg [DEBOUNCE_DELAY-1:0] shift_reg_d2;
+    
+    always @(posedge clk or posedge rst) begin
+        if (rst) begin
+            shift_reg <= DEBOUNCE_DELAY'b0;
+            shift_reg_d1 <= DEBOUNCE_DELAY'b0;
+            shift_reg_d2 <= DEBOUNCE_DELAY'b0;
+        end else begin
+            // Shift the register
+            shift_reg_d2 <= shift_reg_d1;
+            shift_reg_d1 <= shift_reg;
+            shift_reg <= {shift_reg[DEBOUNCE_DELAY-2:0], raw_btn};
+            
+            // Debounce logic
+            if ((shift_reg == shift_reg_d1) && (shift_reg == shift_reg_d2))
+                debounced_btn <= shift_reg[DEBOUNCE_DELAY-1];
+        end
+    end
+endmodule
+

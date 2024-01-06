@@ -1,0 +1,82 @@
+module GameplayState (
+    input wire clk,
+    input wire rst,
+    input wire btn_up,
+    input wire btn_down,
+    input wire btn_left,
+    input wire btn_right,
+    input wire enable, // Module activation
+    input wire [1:0] difficulty,
+    input wire [3:0] selected_song,
+	 input wire [7:0] bpm_input, // Renamed to bpm_input
+    output reg game_over,
+	 
+	 // Top level
+	 input				AUD_ADCDAT,
+
+	// Bidirectionals
+	inout				AUD_BCLK,
+	inout				AUD_ADCLRCK,
+	inout				AUD_DACLRCK,
+
+	inout				FPGA_I2C_SDAT,
+
+	// Outputs
+	output				AUD_XCK,
+	output				AUD_DACDAT,
+
+	output				FPGA_I2C_SCLK
+);
+
+	wire audioFinish;
+
+	Music_Player mop(	
+	.clk(clk),
+	.reset(rst),
+	.play(enable), // Disable when module is not activated
+	.selected_song(selected_song),
+	.difficulty(difficulty),
+	.done(audioFinish),
+	
+	.AUD_ADCDAT(AUD_ADCDAT),
+	// Bidirectionals
+	.AUD_BCLK(AUD_BCLK),
+	.AUD_ADCLRCK(AUD_ADCLRCK),
+	.AUD_DACLRCK(AUD_DACLRCK),
+
+	.FPGA_I2C_SDAT(FPGA_I2C_SDAT),
+
+	// Outputs
+	.AUD_XCK(AUD_XCK),
+	.AUD_DACDAT(AUD_DACDAT),
+
+	.FPGA_I2C_SCLK(FPGA_I2C_SCLK)	
+);
+
+    // State transition logic
+    always @(posedge clk or posedge rst) begin
+        if (rst) begin
+            game_over = 0;
+        end
+        else if (enable) begin
+			  $display("Game Settings: Difficulty = %s, Song = %s", 
+			  ((difficulty == 0) ? "Easy" : ((difficulty == 1) ? "Medium" : "Hard")), 
+			  ((selected_song == 4'b0001) ? "Song 1" :   ((selected_song == 4'b0010) ? "Song 2" : "Song 3")) );
+            
+				// Gameplay logic
+				
+			
+				
+				
+				
+				if (audioFinish) begin
+                $display("Game over conditions met");
+                game_over = 1;
+            end
+            else begin
+                game_over = 0;
+            end
+        end
+    end
+
+endmodule

@@ -1,0 +1,52 @@
+module CombinedWrapper(
+  input wire clk,
+  input wire reset,
+  input wire [1:0] score_updater_selector, // Selector for the ScoreUpdater
+  output wire [31:0] score_out,
+  output wire [31:0] streak_out
+);
+
+  wire [31:0] scoreCounter_out;
+  wire [31:0] streakCounter_out;
+  
+  assign scoreCounter_out = score_out;
+  assign streakCounter_out = streak_out;  
+  
+   /*always @(posedge clk or posedge reset) begin
+        if (reset) begin
+            score_out = 0;
+				streak_out =0;
+		  
+		  end
+		  end*/
+  
+
+  //ScoreCounter ScoreCounterInstance(clk, reset, score_out, scoreCounter_out);
+
+  //StreakCounter StreakCounterInstance( clk, reset, streak_out, streakCounter_out);
+
+  // Instantiate the ScoreUpdater module
+  ScoreUpdater ScoreUpdaterInstance(
+    .clk(clk),
+    .reset(reset),
+    .selector(score_updater_selector),
+    .scoreCounter_in(scoreCounter_out),
+    .streakCounter_in(streakCounter_out),
+    .scoreCounter_out(score_out),
+    .streakCounter_out(streak_out)
+  );
+
+endmodule
+
+/*
+Yes, that's correct. When you instantiate the CombinedWrapper 
+module multiple times within your design, all instances of the module will share the same 
+global instances of the ScoreCounter and StreakCounter. This means that there is only one 
+set of memory for both the score and streak counters, and all calls to the wrapper will 
+update and share that common memory space.
+
+Each instantiation of the wrapper operates on the same ScoreCounter and StreakCounter instances, 
+ensuring that the counters maintain their state across different parts of your design. Any changes 
+made to the counters by one instantiation of the wrapper will affect the values accessible to all 
+other instances of the wrapper.
+*/

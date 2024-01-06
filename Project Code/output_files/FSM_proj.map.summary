@@ -1,0 +1,17 @@
+Analysis & Synthesis Status : Successful - Sat Jan 06 11:53:59 2024
+Quartus Prime Version : 18.0.0 Build 614 04/24/2018 SJ Lite Edition
+Revision Name : FSM_proj
+Top-level Entity Name : FSS_top_level
+Family : Cyclone V
+Logic utilization (in ALMs) : N/A
+Total registers : 833
+Total pins : 106
+Total virtual pins : 0
+Total block memory bits : 131,584
+Total DSP Blocks : 0
+Total HSSI RX PCSs : 0
+Total HSSI PMA RX Deserializers : 0
+Total HSSI TX PCSs : 0
+Total HSSI PMA TX Serializers : 0
+Total PLLs : 2
+Total DLLs : 0

@@ -1,0 +1,246 @@
+module Music_Player
+#(parameter CLOCK_FREQUENCY = 50000000)(
+	
+// Inputs
+	clk,
+	reset,
+	selected_song,
+	difficulty,
+	play,
+	bpm_input,
+	//HEX0,
+	//HEX1,
+	
+
+	AUD_ADCDAT,
+
+	// Bidirectionals
+	AUD_BCLK,
+	AUD_ADCLRCK,
+	AUD_DACLRCK,
+
+	FPGA_I2C_SDAT,
+
+	// Outputs
+	AUD_XCK,
+	AUD_DACDAT,
+
+	FPGA_I2C_SCLK,
+	done
+	
+);
+
+/*****************************************************************************
+ *                             Port Declarations                             *
+ *****************************************************************************/
+// Inputs
+input				clk;
+input				reset;
+input 			play;
+input 	[3:0] selected_song;
+input 	[1:0] difficulty;
+input wire [15:0] bpm_input;
+
+//output [6:0] HEX0;
+//output [6:0] HEX1;
+
+output wire done;
+
+
+
+
+input				AUD_ADCDAT;
+
+// Bidirectionals
+inout				AUD_BCLK;
+inout				AUD_ADCLRCK;
+inout				AUD_DACLRCK;
+
+inout				FPGA_I2C_SDAT;
+
+// Outputs
+output				AUD_XCK;
+output				AUD_DACDAT;
+
+output				FPGA_I2C_SCLK;
+
+
+wire [18:0] delay;
+wire playSound;
+
+reg [18:0] frequency;
+reg playSoundreg;
+
+reg [31:0] note_counter;
+wire Enable;
+
+reg Enabletest;
+reg combineReset;
+
+
+assign playSound = playSoundreg;
+
+
+
+always @(posedge clk) begin
+
+	combineReset = (!play || reset);
+
+	if (combineReset) 
+	 begin
+      note_counter <= 31'b0000;
+    end 
+
+	 else if (Enable) 
+	 begin
+      note_counter <= note_counter + 1;
+    end
+  
+  //frequency <= 20'd191113;
+  playSoundreg <= 1;
+  
+  if (Enable) begin
+  Enabletest = !Enabletest;
+  end
+  
+  if (combineReset) Enabletest = 1;
+  
+  if (done) note_counter <= 0;
+  
+ end
+ 
+ Song_FSM singsong(
+    .Clock(clk),          // Clock input
+    .Reset(combineReset),          // Reset signal
+    .selected_song(selected_song),    // Speed control (1/2, 1/1, 2/1, 4/1)
+    .note_counter(note_counter),
+	 .frequency(delay),
+	 .done(done)
+);
+ 
+   
+  RateDividerDemo #(
+    .CLOCK_FREQUENCY(CLOCK_FREQUENCY)
+  ) rat1 (
+    .ClockIn(clk),
+	 .BPM(bpm_input),
+    .Reset(combineReset),
+    .Speed(difficulty),
+    .Enable(Enable)
+  );
+
+
+DE1_SoC_Audio_Example DE1_SoC_Audio_Example(
+	// Inputs
+	.CLOCK_50(clk),
+	.reset(combineReset),
+	.delay(delay),
+	.playSound(playSound),
+
+	.AUD_ADCDAT(AUD_ADCDAT),
+
+	// Bidirectionals
+	.AUD_BCLK(AUD_BCLK),
+	.AUD_ADCLRCK(AUD_ADCLRCK),
+	.AUD_DACLRCK(AUD_DACLRCK),
+
+	.FPGA_I2C_SDAT(FPGA_I2C_SDAT),
+
+	// Outputs
+	.AUD_XCK(AUD_XCK),
+	.AUD_DACDAT(AUD_DACDAT),
+
+	.FPGA_I2C_SCLK(FPGA_I2C_SCLK)
+	
+);
+
+
+endmodule
+
+module RateDividerDemo
+#(parameter CLOCK_FREQUENCY = 50000000) (
+input ClockIn,
+input Reset,
+input [1:0] Speed,
+input [15:0] BPM,     // Beats Per Minute (e.g., 120 BPM) as a runtime input
+output Enable
+);
+	
+   //Counter_Size = $clog2(CLOCK_FREQUENCY/0.25); //Using the slowest frequency to find max counter_size for the speeds we are using
+	
+	reg [27:0] count; //28 bits required for largest
+	wire pulse;
+	
+	always @(posedge ClockIn) 
+	begin
+    if (Reset | count == 0 ) 
+	 begin 
+	 
+	case (Speed)
+            2'b00: count <= (2* (CLOCK_FREQUENCY / 4)) / ( (BPM) / 60); // 0.5 speed
+            2'b01: count <=  (4 * (CLOCK_FREQUENCY / 4)) / ( (3*BPM) / 60); // 0.75 speed
+            2'b10: count <=  ((CLOCK_FREQUENCY / 4)) / (BPM / 60); // 1/1 speed
+            2'b11: count <=  ((CLOCK_FREQUENCY / 4)) / (2 * (BPM / 60)); // 2/1 speed
+        endcase
+    end
+	 
+	 else 
+	 begin
+      count <= count -1;
+    end
+	 
+   end
+	
+  assign pulse = (count == 0); //If count is 0, then assign pulse = 1
+  assign Enable = pulse;
+  
+endmodule 
+
+
+
+module DisplayCounterDemo
+(
+  input Clock,
+  input Reset,
+  input EnableDisplayCounter,
+  output [31:0] CounterValue
+);
+
+  reg [31:0] counter;
+
+  always @(posedge Clock or posedge Reset) 
+  begin
+    if (Reset) 
+	 begin
+      counter <= 31'b0000;
+    end 
+
+	 else if (EnableDisplayCounter == 1) 
+	 begin
+      counter <= counter + 1;
+    end
+  end
+
+  assign CounterValue = counter; //output
+  
+endmodule 
+
+
+
+/*module hex_decoder(c, display);
+	input [3:0] c;
+	output [6:0] display;
+	assign display[0] = ~(~c[3] & c[2] & c[0] | c[3] & ~c[2] & ~c[1] | c[1] & c[2] | c[1] & ~c[3] | ~c[0] & c[3] | ~c[0] & ~c[2]);
+
+	assign display[1] = ~(~c[2] & ~c[0] | ~c[2] & ~c[1] | ~c[3] & c[1] & c[0] | ~c[3] & c[2] & ~c[1] & ~c[0] | c[3] & c[2] & ~c[1] & c[0]);
+
+	assign display[2] = ~(~c[3] & c[2] | c[3] & ~c[2] | ~c[2] & c[0] | ~c[1] & ~c[2] | c[3] & c[2] & ~c[1] & c[0]);
+
+	assign display[3] = ~(~c[3] & ~c[2] & c[1] | ~c[3] & ~c[2] & ~c[0] | c[2] & c[1] & ~c[0] | c[3] & ~c[2] & c[0] | c[3] & ~c[1] | c[2] & ~c[1] & c[0]);
+
+	assign display[4] = ~(~c[2] & ~c[0] | c[3] & c[2] | c[3] & c[1] | c[1] & ~c[0]);
+
+	assign display[5] = ~(~c[3] & ~c[1] & ~c[0] | ~c[0] & c[2] | c[3] & ~c[2] & c[0] | c[3] & ~c[2] & ~c[1] | c[2] & ~c[1] & ~c[3] | c[3] & c[2] & c[1] | c[3] & c[1] & ~c[0]);
+
+	assign display[6] = ~(~c[3] & c[1] & ~c[0] | ~c[3] & ~c[2] & c[1] | c[3] & ~c[2] & ~c[0] | c[3] & ~c[2] & ~c[1] | c[2] & ~c[1] & c[0] | ~c[3] & c[2] & ~c[1] | c[3] & c[2] & c[1] | c[3] & c[1] & c[0]);
+endmodule*/
