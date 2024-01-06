@@ -1,0 +1,163 @@
+
+module KeyboardInput (
+	// Inputs
+	clk,
+	up,
+	down,
+	left,
+	right,
+	reset,
+	//KEY,
+
+	// Bidirectionals
+	PS2_CLK,
+	PS2_DAT,
+	
+	// Outputs
+	//HEX0,
+	//HEX1,
+	//HEX2,
+	//HEX3,
+	//HEX4,
+	//HEX5,
+	//HEX6,
+	//HEX7,
+	//LEDR
+);
+
+/*****************************************************************************
+ *                           Parameter Declarations                          *
+ *****************************************************************************/
+
+
+/*****************************************************************************
+ *                             Port Declarations                             *
+ *****************************************************************************/
+
+// Inputs
+input				clk;
+input reset;
+//input		[3:0]	KEY;
+
+// Bidirectionals
+inout				PS2_CLK;
+inout				PS2_DAT;
+
+output reg up;
+output reg down;
+output reg left;
+output reg right;
+
+// Outputs
+/*
+output		[6:0]	HEX0;
+output		[6:0]	HEX1;
+output		[6:0]	HEX2;
+output		[6:0]	HEX3;
+output		[6:0]	HEX4;
+output		[6:0]	HEX5;
+output		[6:0]	HEX6;
+output		[6:0]	HEX7;
+output		[9:0] LEDR;
+*/
+
+/*****************************************************************************
+ *                 Internal Wires and Registers Declarations                 *
+ *****************************************************************************/
+
+// Internal Wires
+wire		[7:0]	ps2_key_data;
+wire				ps2_key_pressed;
+
+// Internal Registers
+reg			[7:0]	last_data_received;
+
+// State Machine Registers
+
+/*****************************************************************************
+ *                         Finite State Machine(s)                           *
+ *****************************************************************************/
+
+
+/*****************************************************************************
+ *                             Sequential Logic                              *
+ *****************************************************************************/
+
+ localparam  UP    = 8'h75, // break code
+            DOWN   = 8'h72, // first shift scan
+            LEFT   = 8'h6B, // second shift scan
+				RIGHT   = 8'h74, // second shift scan
+				BREAKY    = 8'hF0,
+            CAPS     = 8'h58; // caps lock
+ 
+ reg caps;
+
+ reg breaky;
+ 
+ //assign LEDR[0] = caps;
+ //assign LEDR[1] = up;
+ //assign LEDR[2] = down;
+ //assign LEDR[3] = left;
+ //assign LEDR[4] = right;
+ //assign LEDR[5] = ps2_key_pressed;
+ //assign LEDR[6] = breaky;
+ 
+ 
+always @(posedge ps2_key_pressed)
+begin
+	if (reset)
+		last_data_received <= 8'h00;
+	else if (ps2_key_pressed == 1'b1)
+		last_data_received <= ps2_key_data;
+	
+	if (breaky == 0 ) begin
+		if (last_data_received == UP || last_data_received == DOWN || last_data_received == LEFT || last_data_received == RIGHT) begin
+	up <= (last_data_received == UP);
+	down <= (last_data_received == DOWN);
+	left <= (last_data_received == LEFT);
+	right <= (last_data_received == RIGHT);
+	caps <= (last_data_received == CAPS);
+	end
+	
+	end
+	
+	
+	breaky <= 1;
+	if (last_data_received == BREAKY) breaky <= 0;
+	
+	
+	
+	if (last_data_received == BREAKY) begin
+	up <= 0;
+	down <= 0;
+	left <= 0;
+	right <= 0;
+	caps <= 0;
+	end
+	
+end
+
+/*****************************************************************************
+ *                            Combinational Logic                            *
+ *****************************************************************************/
+
+/*****************************************************************************
+ *                              Internal Modules                             *
+ *****************************************************************************/
+
+PS2_Controller PS2 (
+	// Inputs
+	.CLOCK_50				(clk),
+	.reset				(reset),
+
+	// Bidirectionals
+	.PS2_CLK			(PS2_CLK),
+ 	.PS2_DAT			(PS2_DAT),
+
+	// Outputs
+	.received_data		(ps2_key_data),
+	.received_data_en	(ps2_key_pressed)
+);
+
+
+endmodule

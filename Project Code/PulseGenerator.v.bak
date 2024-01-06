@@ -1,0 +1,127 @@
+module GameplayState (
+    input wire clk,
+    input wire rst,
+    input wire btn_up,
+    input wire btn_down,
+    input wire btn_left,
+    input wire btn_right,
+    input wire enable,
+    input wire [1:0] difficulty,
+    input wire [3:0] selected_song,
+    input wire [7:0] bpm_input, // Renamed to bpm_input
+    output reg game_over
+);
+
+    // Constants for timing window
+    parameter PERFECT_HIT_WINDOW = 500; // 0.5 seconds in milliseconds
+    parameter NORMAL_HIT_WINDOW = 1000; // 1.0 seconds in milliseconds
+    parameter MISS_WINDOW = 500; // 0.5 seconds in milliseconds
+
+    // Internal signals
+    reg [31:0] score_internal;
+    reg [31:0] streak_internal;
+    reg [15:0] timing_counter;
+    reg [15:0] expected_timing;
+
+    // State machine states
+    localparam IDLE = 2'b00;
+    localparam NORMAL_HIT = 2'b01;
+    localparam PERFECT_HIT = 2'b10;
+    localparam MISS = 2'b11;
+
+    reg [1:0] state, next_state;
+
+    // Arrow position generator (similar to your ArrowGenerator module)
+    ArrowGenerator ArrowGenInst (
+        .Clock(clk),
+        .Reset(rst),
+        .Speed(difficulty),
+        .BPM(bpm_input), // Updated to use bpm_input
+        .ArrowPos(),
+        .Enable()
+    );
+
+    // CombinedWrapper for ScoreCounter and StreakCounter
+    CombinedWrapper CombinedWrapperInst (
+        .clk(clk),
+        .reset(rst),
+        .score_updater_selector(state), // Use the current state as the selector
+        .score_out(score_internal),
+        .streak_out(streak_internal)
+    );
+
+    // State machine logic
+    always @(posedge clk or posedge rst) begin
+        if (rst) begin
+            // Reset signals on reset
+            game_over <= 0;
+            timing_counter <= 0;
+            expected_timing <= 0;
+            state <= IDLE;
+        end else begin
+            // Update state machine based on button presses and timing
+            case (state)
+                IDLE: begin
+                    // Check for arrow_enable to transition to NORMAL_HIT state
+                    if (arrow_enable) begin
+                        state <= NORMAL_HIT;
+                        expected_timing <= timing_counter + NORMAL_HIT_WINDOW;
+                    end
+                end
+
+                NORMAL_HIT, PERFECT_HIT: begin
+                    // Check for button presses and calculate hits
+                    if (btn_up || btn_down || btn_left || btn_right) begin
+                        if (timing_counter <= expected_timing + PERFECT_HIT_WINDOW &&
+                            timing_counter >= expected_timing - PERFECT_HIT_WINDOW) begin
+                            // Perfect hit condition
+                            state <= PERFECT_HIT;
+                        else if (timing_counter <= expected_timing + NORMAL_HIT_WINDOW &&
+                                   timing_counter >= expected_timing - NORMAL_HIT_WINDOW) begin
+                            // Normal hit condition
+                            state <= NORMAL_HIT;
+                        else begin
+                            // Miss condition
+                            state <= MISS;
+                        end
+                        // Update score and streak using the combined wrapper
+                        score_internal <= CombinedWrapperInst.scoreCounter_out;
+                        streak_internal <= CombinedWrapperInst.streakCounter_out;
+                        expected_timing <= timing_counter + NORMAL_HIT_WINDOW;
+                    end else if (timing_counter > expected_timing + MISS_WINDOW) begin
+                        // Miss condition if no button press
+                        state <= MISS;
+                    end
+                end
+
+                MISS: begin
+                    // Check for button press to transition to NORMAL_HIT state
+                    if (btn_up || btn_down || btn_left || btn_right) begin
+                        state <= NORMAL_HIT;
+                        expected_timing <= timing_counter + NORMAL_HIT_WINDOW;
+                    end else if (timing_counter > expected_timing + MISS_WINDOW) begin
+                        // Reset to IDLE state if no button press after MISS_WINDOW
+                        state <= IDLE;
+                    end
+                end
+            endcase
+
+            // Update timing counter
+            timing_counter <= timing_counter + 1;
+
+            // Update game over condition (you can customize this based on your game end conditions)
+            if (timing_counter > MAX_GAME_DURATION) begin
+                game_over <= 1;
+            end else if (btn_game_over_condition) begin
+                game_over <= 1;
+            end else begin
+                game_over <= 0;
+            end
+        end
+    end
+
+    // Output score and streak (removed assign statements, as they are updated in the state machine)
+    // assign score_out = score_internal;
+    // assign streak_out = streak_internal;
+
+endmodule
